@@ -1,6 +1,8 @@
-import colors from 'colors';
-import { leerInput, inquirerMenu, pausa } from './helpers/inquirer.js';
-import Busquedas from './models/busquedas.js';
+require('dotenv').config({path:'./tokens.env'})
+
+
+const { leerInput, inquirerMenu, pausa } = require('./helpers/inquirer');
+const Busquedas = require('./models/busquedas');
 
 const main = async () => {
 

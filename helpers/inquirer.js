@@ -1,5 +1,5 @@
-import inquirer from 'inquirer';
-import colors from 'colors';
+const inquirer = require('inquirer');
+require('colors');
 
 const preguntas = [
     {
@@ -134,12 +134,11 @@ const mostrarListadoChecklist = async( tareas = [] ) => {
             choices
         }
     ]
-
     const { ids } = await inquirer.prompt(pregunta);
     return ids;
 }
 
-export  {
+module.exports = {
     inquirerMenu,
     pausa,
     leerInput,

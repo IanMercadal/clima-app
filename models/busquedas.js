@@ -1,24 +1,37 @@
-import axios from 'axios';
+const  {axios} = require('axios');
 
-export default class Busquedas {
-     
+class Busquedas {
+
     historial = ['Tegucigalpa','Madrid','San José'];
 
     constructor() {
         //  TODO: leer DB si existe
+
+    }
+
+    get paramsMapbox() {
+        return {
+            'access_token': process.env.MAPBOX_KEY,
+            'limit:': 5,
+            'language': 'es'
+        }
     }
 
     async ciudad(lugar="") {
         try {
-            // peticion http 
-            const resp = await axios.get('http://reqres.in/api/users?page=2')
-            console.log(resp.data.per_page);
+            // Peticion http 
+            const instance = axios.create({
+                baseURL: `https://api.mapbox.com/geocoding/v5/mapbox.places/${lugar}.json`,
+                params:  this.paramsMapbox
+            })
+
+            const resp = await instance.get();
+            console.log(resp.data);
         return []; // retornar lugares
         } catch (error) {
             
         }
-
-
-        
     }
 }
+
+module.exports = Busquedas;
