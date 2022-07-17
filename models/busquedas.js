@@ -1,4 +1,5 @@
-const  {axios} = require('axios');
+const axios = require('axios');
+require('dotenv').config({path:'./tokens.env'})
 
 class Busquedas {
 
@@ -12,7 +13,7 @@ class Busquedas {
     get paramsMapbox() {
         return {
             'access_token': process.env.MAPBOX_KEY,
-            'limit:': 5,
+            'limit': 5,
             'language': 'es'
         }
     }
@@ -24,12 +25,17 @@ class Busquedas {
                 baseURL: `https://api.mapbox.com/geocoding/v5/mapbox.places/${lugar}.json`,
                 params:  this.paramsMapbox
             })
-
-            const resp = await instance.get();
-            console.log(resp.data);
-        return []; // retornar lugares
-        } catch (error) {
             
+            const resp = await instance.get();
+            return resp.data.features.map(lugar => ({
+                id: lugar.id,
+                nombre: lugar.place_name,
+                lng: lugar.center[0],
+                lat: lugar.center[1],
+            }))
+
+        } catch (error) {
+            console.log("Error: ", error)
         }
     }
 }
