@@ -1,13 +1,25 @@
+const fs = require('fs');
 const axios = require('axios');
 require('dotenv').config({path:'./tokens.env'})
 
 class Busquedas {
 
-    historial = ['Tegucigalpa','Madrid','San José'];
+    historial = [];
+    dbPath = './db/database.json'
 
     constructor() {
         //  TODO: leer DB si existe
+        this.leerDB();
+    }
 
+    get hisotrialCapitalizado() {
+        
+        return this.hisotrial.map(lugar => {
+            let palabras = lugar.split(' ');
+            palabras = palabras.map(p => p[0].toUpperCase() + p.substring(1) );
+
+            return palabras.join(' ');
+        });
     }
 
     get paramsMapbox() {
@@ -67,6 +79,33 @@ class Busquedas {
         } catch (error) {
             console.log("Error: ", error)
         }
+    }
+
+    agregarHistorial(lugar = '') {
+
+        if(this.historial.includes(lugar.toLocaleLowerCase() )) {
+            return;
+        }
+        this.historial = this.historial.split(0,5)
+        this.historial.unshift(lugar);
+        this.guardarDB();
+    }
+
+    guardarDB() {
+        const payload = {
+            historial: this.historial
+        }
+        fs.writeFileSync(this.dbPath, JSON.stringify(payload))
+    }
+
+    leerDB() {
+
+        if(!fs.existsSync(this.dbPath)) return;
+
+        const info = fs.readFileSync(this.dbPath, {encoding: 'utf-8'});
+        const data = JSON.parse(info);
+
+        this.historial = data.historial
     }
 }
 

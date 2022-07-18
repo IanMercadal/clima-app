@@ -24,8 +24,13 @@ const main = async () => {
                     console.log('Ciudad no encontrada');
                 } else {
                     const id = await listarLugares(lugares);
+                    if(id === '0') continue;
+
                     const lugarSelec = lugares.find(l => l.id);
                     
+                    // Guardar en DB
+                    busquedas.agregarHistorial(lugarSelec.nombre)
+
                     // Datos del clima
                     const clima = await busquedas.climaLugar(lugarSelec.lat, lugarSelec.lng)
                     // Mostrar resultaods
@@ -39,7 +44,13 @@ const main = async () => {
                     console.log('Aspécto del día:', clima.desc.green);
                 }
                 break;
-        }
+
+                case 2:
+                    busquedas.historial.forEach((lugar,i) => {
+                        const idx = `${i + 1}.`.green;
+                        console.log(`${idx} ${lugar} `);
+                    })
+            }
 
         if (opt !== 0) await pausa();
     } while (opt !== 0);
